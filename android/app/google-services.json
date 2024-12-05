@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "504000806511",
+    "project_id": "authors-route-app",
+    "storage_bucket": "authors-route-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:504000806511:android:5e89f7964c60daf34f979a",
+        "android_client_info": {
+          "package_name": "com.authors_route_app.authors_route_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGTrdgCaffZtSqY349Enqz5FRcg_3vPbU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

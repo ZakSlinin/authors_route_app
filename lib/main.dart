@@ -1,11 +1,20 @@
+import 'package:authors_route_app/firebase_options.dart';
 import 'package:authors_route_app/widgets/AuthorsRouteAddRoute.dart';
 import 'package:authors_route_app/widgets/AuthorsRouteHomePage.dart';
 import 'package:authors_route_app/widgets/AuthorsRouteLogin.dart';
 import 'package:authors_route_app/widgets/AuthorsRouteReg.dart';
 import 'package:authors_route_app/widgets/MyProfile.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(const AuthorsRouteApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform
+  );
+  runApp(const AuthorsRouteApp());
+}
 
 class AuthorsRouteApp extends StatelessWidget {
   const AuthorsRouteApp({super.key});
@@ -33,7 +42,7 @@ class AuthorsRouteApp extends StatelessWidget {
         appBarTheme: const AppBarTheme(iconTheme: IconThemeData(color: Colors.white))
       ),
       routes: {
-        '/': (context) => const AuthorsRouteReg(),
+        '/reg': (context) => const AuthorsRouteReg(),
         '/login': (context) => const AuthorsRouteLogin(),
         '/home': (context) => const AuthorsRouteHomePage(),
         '/add-route': (context) => const AuthorsRouteAddRoute(),

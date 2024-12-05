@@ -1,3 +1,5 @@
+import 'package:authors_route_app/services/auth_services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class AuthorsRouteReg extends StatelessWidget {
@@ -8,7 +10,10 @@ class AuthorsRouteReg extends StatelessWidget {
     final nameController = TextEditingController();
     final passwordController = TextEditingController();
     final repeatPasswordController = TextEditingController();
+    final emailController = TextEditingController();
+    var userCollection = FirebaseFirestore.instance.collection('users');
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: DecoratedBox(
         decoration: const BoxDecoration(
             image: DecorationImage(image: AssetImage('assets/jpg/bg.jpg'), fit: BoxFit.cover)
@@ -67,19 +72,35 @@ class AuthorsRouteReg extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 16),
+                    TextField(
+                      style: const TextStyle(color: Colors.black),
+                      controller: emailController,
+                      decoration: InputDecoration(
+                          floatingLabelBehavior: FloatingLabelBehavior.never,
+                          labelText: 'Email',
+                          labelStyle: theme.textTheme.bodyMedium,
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+                          fillColor: const Color.fromARGB(255, 217, 217, 217),
+                          filled: true
+                      ),
+                    ),
+                    const SizedBox(height: 16),
                     SizedBox(
                       height: 50,
                       width: 390,
                       child: DecoratedBox(
                           decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(20)),
                           child: TextButton(
-                              onPressed: () {
+                              onPressed: () async {
                                 if (nameController.text.isEmpty || passwordController.text.isEmpty || repeatPasswordController.text.isEmpty) {
                                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Пожалуйста, заполните все поля')));
                                 } else if (passwordController.text != repeatPasswordController.text){
                                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Пароли не совпадают')));
                                 } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Вход успешно выполнен')));
+                                  await AuthService().singup(
+                                      email: emailController.text,
+                                      password: passwordController.text
+                                  );
                                   Navigator.of(context).pushNamed('/home');
                                 }
                               },
