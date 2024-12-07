@@ -1,11 +1,26 @@
+import 'dart:math';
+import 'package:authors_route_app/services/auth_services.dart';
+
 import 'package:authors_route_app/services/auth_services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class AuthorsRouteReg extends StatelessWidget {
+class AuthorsRouteReg extends StatefulWidget {
   const AuthorsRouteReg ({super.key});
+
+  @override
+  State<AuthorsRouteReg> createState() => _AuthorsRouteRegState();
+}
+
+class _AuthorsRouteRegState extends State<AuthorsRouteReg> {
+  final FirebaseService firebaseService = FirebaseService();
+
   @override
   Widget build(BuildContext context) {
+    bool isLogin = false;
+
+    final onAuth = isLogin ? firebaseService : () {};
+
     final theme  = Theme.of(context);
     final nameController = TextEditingController();
     final passwordController = TextEditingController();
@@ -97,10 +112,6 @@ class AuthorsRouteReg extends StatelessWidget {
                                 } else if (passwordController.text != repeatPasswordController.text){
                                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Пароли не совпадают')));
                                 } else {
-                                  await AuthService().singup(
-                                      email: emailController.text,
-                                      password: passwordController.text
-                                  );
                                   Navigator.of(context).pushNamed('/home');
                                 }
                               },

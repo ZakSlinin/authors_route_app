@@ -1,62 +1,71 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
-class UserModel {
-  final String uid;
-  final String email;
-  final String name;
+class FirebaseService {
+  // singleton дает возможность вызывать класс из любого места в приложении
+  static final FirebaseService _singleton = FirebaseService._internal();
+  factory FirebaseService() => _singleton;
+  FirebaseService._internal();
 
-  UserModel({required this.uid, required this.email, required this.name});
+  final auth = FirebaseAuth.instance;
 
-  // Метод для преобразования документа Firestore в объект UserModel
-  factory UserModel.fromDocument(DocumentSnapshot doc) {
-    return UserModel(
-      uid: doc['uid'],
-      email: doc['email'],
-      name: doc['name'],
-    );
+  User? get currentUser => auth.currentUser;
+
+  void listenUser(void Function(User?)? doListen) {
+    auth.authStateChanges().listen(doListen);
   }
 
-  // Метод для преобразования объекта UserModel в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'uid': uid,
-      'email': email,
-      'name': name,
-    };
-  }
-}
-
-
-class AuthService {
-  Future<void> singup({
+  void login({
     required String email,
-    required String password
+    required String password,
   }) async {
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: email,
-          password: password
-      );
-    } on FirebaseAuthException catch(e) {
-        String message = '';
-        if (e.code == 'weak-password') {
-          message = 'The password provided is too weak.';
-        } else if (e.code == 'email-already-in-use'){
-          message = 'An account already exists with that email.';
-        }
-          Fluttertoast.showToast(
-              msg: message,
-              toastLength: Toast.LENGTH_LONG,
-              gravity: ToastGravity.SNACKBAR,
-              backgroundColor: Colors.grey,
-              textColor: Colors.white,
-              fontSize: 14
-          );
+      final identifier = await auth.signInWithEmailAndPassword(
+          email: email, password: password);
+      print(identifier);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        print('No user found for that email.');
+      } else if (e.code == 'wrong-password') {
+        print('Wrong password.');
       }
-      catch(e) {
+    }
+  }
+
+  void reg({required String email, required String password}) async {
+    try {
+      final identifier = await auth.createUserWithEmailAndPassword(
+          email: email, password: password);
+      print(identifier);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'email-already-in-use') {
+        print('email already in use');
+      } else if (e.code == 'weak-password') {
+        print('password is too weak, try another');
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> logout() async {
+    await auth.signOut();
+  }
+
+  Future<void> verificationEmail() async {
+    if (currentUser != null) {
+      await currentUser!.sendEmailVerification();
+    } else {
+      print('No user is currently signed in.');
+    }
+  }
+
+  @override
+  String toString() {
+    if (currentUser == null) {
+      return 'no user';
+    } else {
+      return 'user ${currentUser!.email}';
     }
   }
 }
