@@ -1,48 +1,33 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class MyProfile extends StatelessWidget {
-  const MyProfile({super.key});
+class UserInfoScreen extends StatelessWidget {
+  const UserInfoScreen({
+    Key? key,
+    required this.user,
+  }) : super(key: key);
+
+  final User user;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black, title: Text('Имя автора', style: theme.textTheme.bodyLarge,),
+        title: Text('${user.displayName}'),
       ),
-      body: DecoratedBox(
-        decoration: const BoxDecoration(
-            image: DecorationImage(image: AssetImage('assets/jpg/bg.jpg'), fit: BoxFit.cover)
-        ),
+      body: Center(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(1, 180, 1, 2),
-          child: SafeArea(
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 16 ),
-                child: Column(
-                  children: [
-                    Text('Маршруты автора: ', style: theme.textTheme.bodyLarge,),
-                    SizedBox(height: 25,),
-                    // TODO: API
-                    Container(
-                      height: 100,
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: const Color.fromARGB(215, 217, 217, 217)),
-                        child: ListView.builder(
-                          itemCount: 1,
-                          itemBuilder: (context, index) => const ListTile(
-                            title: Text('Название подборки'),
-                            subtitle: Text('описание'),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Имя: ${user.displayName ?? "Не указано"}'),
+              SizedBox(height: 8),
+              Text('Email: ${user.email ?? "Не указано"}'),
+              SizedBox(height: 8),
+            ],
           ),
         ),
       ),

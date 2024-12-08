@@ -59,13 +59,4 @@ class FirebaseService {
       print('No user is currently signed in.');
     }
   }
-
-  @override
-  String toString() {
-    if (currentUser == null) {
-      return 'no user';
-    } else {
-      return 'user ${currentUser!.email}';
-    }
-  }
 }
