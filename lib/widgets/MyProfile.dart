@@ -16,21 +16,35 @@ class UserInfoScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('${user.displayName}'),
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Имя: ${user.displayName ?? "Не указано"}'),
-              SizedBox(height: 8),
-              Text('Email: ${user.email ?? "Не указано"}'),
-              SizedBox(height: 8),
-            ],
+      body: DecoratedBox(
+          decoration: const BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage('assets/jpg/bg.jpg'), fit: BoxFit.cover)
           ),
+        child: SafeArea(
+            child: Center(
+              child: Column(
+                children: <Widget>[
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Имя: ${user.displayName ?? "Не указано"}'),
+                          SizedBox(height: 8),
+                          Text('Email: ${user.email ?? "Не указано"}'),
+                          SizedBox(height: 8),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            )
         ),
-      ),
+      )
     );
   }
 }
