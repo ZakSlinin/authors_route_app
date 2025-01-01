@@ -1,22 +1,17 @@
-import 'package:authors_route_app/firebase_options.dart';
-import 'package:authors_route_app/services/auth_services.dart';
-import 'package:authors_route_app/widgets/AuthorsRouteAddRoute.dart';
-import 'package:authors_route_app/widgets/AuthorsRouteHomePage.dart';
-import 'package:authors_route_app/widgets/AuthorsRouteReg.dart';
-import 'package:authors_route_app/widgets/MyProfile.dart';
+import 'package:authors_route_app/app/app_router.dart';
+import 'package:authors_route_app/app/firebase_options.dart';
+import 'package:authors_route_app/features/authentication/auth_services.dart';
+import 'package:authors_route_app/pages/authentication/authendication_page.dart';
+import 'package:authors_route_app/pages/profile/user_profile_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const AuthorsRouteApp());
 }
-
-final GlobalKey<NavigatorState> kNavigatorKey = GlobalKey<NavigatorState>();
 
 class AuthorsRouteApp extends StatefulWidget {
   const AuthorsRouteApp({super.key});
@@ -26,28 +21,11 @@ class AuthorsRouteApp extends StatefulWidget {
 }
 
 class _AuthorsRouteAppState extends State<AuthorsRouteApp> {
-  @override
-  void initState() {
-    super.initState();
-    FirebaseService().listenUser((user) {
-      if (user == null) {
-        Navigator.of(kNavigatorKey.currentContext!).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (_) => const AuthScreen()),
-              (route) => false, // Удаляем все предыдущие маршруты
-        );
-      } else {
-        Navigator.of(kNavigatorKey.currentContext!).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (_) => UserInfoScreen(user: user)),
-              (route) => false, // Удаляем все предыдущие маршруты
-        );
-      }
-    });
-  }
+  final appRouter = AppRouter();
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      navigatorKey: kNavigatorKey,
+    return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       title: 'AuthorsRouteApp',
       theme: ThemeData(
@@ -59,20 +37,10 @@ class _AuthorsRouteAppState extends State<AuthorsRouteApp> {
               fontSize: 25,
               fontWeight: FontWeight.bold,
             ),
-            bodyLarge: TextStyle(
-                color: Colors.white,
-                fontSize: 25,
-                fontWeight: FontWeight.bold
-            ),
+            bodyLarge: TextStyle(color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold),
           ),
-          appBarTheme: const AppBarTheme(iconTheme: IconThemeData(color: Colors.white))
-      ),
-      initialRoute: '/auth',
-      routes: {
-        '/auth': (context) => const AuthScreen(),
-        '/home': (context) => const AuthorsRouteHomePage(),
-        '/add-route': (context) => const AuthorsRouteAddRoute(),
-      },
+          appBarTheme: const AppBarTheme(iconTheme: IconThemeData(color: Colors.white))),
+      routerConfig: appRouter.config(),
     );
   }
 }
