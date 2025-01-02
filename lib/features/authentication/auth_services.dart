@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 class FirebaseService {
   // singleton дает возможность вызывать класс из любого места в приложении
@@ -11,40 +11,54 @@ class FirebaseService {
 
   User? get currentUser => auth.currentUser;
 
+  bool get isAuthenticated => currentUser != null;
+
   void listenUser(void Function(User?)? doListen) {
     auth.authStateChanges().listen(doListen);
   }
 
-  void login({
+  Future<void> login({
     required String email,
     required String password,
   }) async {
     try {
-      final identifier = await auth.signInWithEmailAndPassword(
-          email: email, password: password);
-      print(identifier);
+      final identifier = await auth.signInWithEmailAndPassword(email: email, password: password);
+      if (kDebugMode) {
+        print(identifier);
+      }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        print('No user found for that email.');
+        if (kDebugMode) {
+          print('No user found for that email.');
+        }
       } else if (e.code == 'wrong-password') {
-        print('Wrong password.');
+        if (kDebugMode) {
+          print('Wrong password.');
+        }
       }
     }
   }
 
-  void reg({required String email, required String password}) async {
+  Future<void> reg({required String email, required String password}) async {
     try {
-      final identifier = await auth.createUserWithEmailAndPassword(
-          email: email, password: password);
-      print(identifier);
+      final identifier = await auth.createUserWithEmailAndPassword(email: email, password: password);
+      if (kDebugMode) {
+        print(identifier);
+      }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
-        print('email already in use');
+        if (kDebugMode) {
+          print('email already in use');
+        }
       } else if (e.code == 'weak-password') {
-        print('password is too weak, try another');
+        if (kDebugMode) {
+          print('password is too weak, try another');
+        }
       }
-    } catch (e) {
-      print(e);
+    } on Exception catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 
@@ -56,7 +70,9 @@ class FirebaseService {
     if (currentUser != null) {
       await currentUser!.sendEmailVerification();
     } else {
-      print('No user is currently signed in.');
+      if (kDebugMode) {
+        print('No user is currently signed in.');
+      }
     }
   }
 }
