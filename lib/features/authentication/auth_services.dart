@@ -1,10 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
 class FirebaseService {
-  // singleton дает возможность вызывать класс из любого места в приложении
+  // singleton дает возможность вызывать класс из любого места в приложении, а также создает единый метод
   static final FirebaseService _singleton = FirebaseService._internal();
+
   factory FirebaseService() => _singleton;
+
   FirebaseService._internal();
 
   final auth = FirebaseAuth.instance;
@@ -20,9 +23,11 @@ class FirebaseService {
   Future<void> login({
     required String email,
     required String password,
+    required String displayName,
   }) async {
     try {
-      final identifier = await auth.signInWithEmailAndPassword(email: email, password: password);
+      final identifier = await auth.signInWithEmailAndPassword(
+          email: email, password: password);
       if (kDebugMode) {
         print(identifier);
       }
@@ -39,9 +44,21 @@ class FirebaseService {
     }
   }
 
-  Future<void> reg({required String email, required String password}) async {
+  Future<void> reg({
+    required String email,
+    required String password,
+    required String displayName,
+  }) async {
     try {
-      final identifier = await auth.createUserWithEmailAndPassword(email: email, password: password);
+      final identifier = await auth.createUserWithEmailAndPassword(
+          email: email, password: password);
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(identifier.user?.uid)
+          .set({
+        'displayName': displayName,
+        'email': email,
+      });
       if (kDebugMode) {
         print(identifier);
       }

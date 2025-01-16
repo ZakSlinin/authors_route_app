@@ -17,11 +17,13 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
 
   @override
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
+    nameController.dispose();
     super.dispose();
   }
 
@@ -29,14 +31,17 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final onAuth = isLogin
-        ? () => firebaseService.login(
-              email: emailController.text,
-              password: passwordController.text,
-            )
-        : () => firebaseService.reg(
-              email: emailController.text,
-              password: passwordController.text,
-            );
+        ? () =>
+        firebaseService.login(
+          email: emailController.text,
+          password: passwordController.text, displayName: nameController.text,
+        )
+        : () =>
+        firebaseService.reg(
+            email: emailController.text,
+            password: passwordController.text,
+            displayName: nameController.text,
+        );
     final buttonText = isLogin ? 'Login' : 'Register';
 
     return Scaffold(
@@ -49,7 +54,8 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
       ),
       body: DecoratedBox(
         decoration:
-            const BoxDecoration(image: DecorationImage(image: AssetImage('assets/jpg/bg.jpg'), fit: BoxFit.cover)),
+        const BoxDecoration(image: DecorationImage(
+            image: AssetImage('assets/jpg/bg.jpg'), fit: BoxFit.cover)),
         child: Padding(
           padding: const EdgeInsets.fromLTRB(1, 180, 1, 2),
           child: SafeArea(
@@ -67,6 +73,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                             onAuth: onAuth,
                             emailController: emailController,
                             passwordController: passwordController,
+                            nameController: nameController,
                           ),
                           TextButton(
                             child: Text(buttonText),

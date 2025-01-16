@@ -16,11 +16,12 @@ class UserProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${user.displayName}'),
+        title: Text('${user.email}'),
       ),
       body: DecoratedBox(
-        decoration:
-            const BoxDecoration(image: DecorationImage(image: AssetImage('assets/jpg/bg.jpg'), fit: BoxFit.cover)),
+        decoration: const BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage('assets/jpg/bg.jpg'), fit: BoxFit.cover)),
         child: SafeArea(
           child: Center(
             child: Column(
@@ -32,7 +33,6 @@ class UserProfilePage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Имя: ${user.displayName ?? "Не указано"}'),
                         const SizedBox(height: 8),
                         Text('Email: ${user.email ?? "Не указано"}'),
                         const SizedBox(height: 8),

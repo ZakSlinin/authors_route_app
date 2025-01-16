@@ -12,6 +12,7 @@ class AuthorsAddRoutePage extends StatelessWidget {
     final TextEditingController countryController = TextEditingController();
     final TextEditingController cityController = TextEditingController();
     final TextEditingController descriptionController = TextEditingController();
+    final TextEditingController titleController = TextEditingController();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
@@ -32,6 +33,19 @@ class AuthorsAddRoutePage extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
                 child: Column(
                   children: [
+                    TextField(
+                      controller: titleController,
+                      style: const TextStyle(color: Colors.black),
+                      decoration: InputDecoration(
+                        floatingLabelBehavior: FloatingLabelBehavior.never,
+                        labelText: 'Название маршрута',
+                        labelStyle: theme.textTheme.bodyMedium,
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+                        fillColor: const Color.fromARGB(255, 217, 217, 217),
+                        filled: true,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
                     TextField(
                       controller: countryController,
                       style: const TextStyle(color: Colors.black),

@@ -6,6 +6,7 @@ class AuthForm extends StatelessWidget {
     required this.authButtonText,
     required this.emailController,
     required this.passwordController,
+    required this.nameController,
     Key? key,
   }) : super(key: key);
 
@@ -13,12 +14,22 @@ class AuthForm extends StatelessWidget {
   final String authButtonText;
   final TextEditingController emailController;
   final TextEditingController passwordController;
+  final TextEditingController nameController;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        TextFormField(
+          controller: nameController,
+          decoration: const InputDecoration(
+            labelText: 'Name',
+            fillColor: Color.fromARGB(255, 0, 0, 0),
+            filled: true,
+          ),
+        ),
+        const SizedBox(height: 16.0,),
         TextFormField(
           controller: emailController,
           decoration: const InputDecoration(
